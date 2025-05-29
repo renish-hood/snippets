@@ -3,51 +3,72 @@ import { useEffect, useState } from "react";
 import { useMotionValue } from "framer-motion";
 import { CardPattern } from "./CardPattern";
 
-export const Card = () => {
-    let mouseX = useMotionValue(0);
-    let mouseY = useMotionValue(0);
-  
-    const [randomString, setRandomString] = useState("");
-  
-    useEffect(() => {
-      let str = generateRandomString(1500);
-      setRandomString(str);
-    }, []);
-  
-    function onMouseMove({ currentTarget, clientX, clientY }: { currentTarget: HTMLDivElement; clientX: number; clientY: number }) {
-      let { left, top } = currentTarget.getBoundingClientRect();
-      mouseX.set(clientX - left);
-      mouseY.set(clientY - top);
-  
-      const str = generateRandomString(1500);
-      setRandomString(str);
-    }
-  
-    return (
-      <a
-        href={`https://aceternity.com/templates?ref=stackblitz`}
-        target="\_\_blank"
-        className="p-0.5 bg-transparent aspect-square flex items-center justify-center w-full h-full relative"
+interface Snippet {
+  id: string;
+  title: string;
+  description: string;
+  content: string;
+  tags: string[];
+  lastUpdated: string;
+  language: string;
+  githubUrl?: string;
+  demoUrl?: string;
+}
+
+interface CardProps {
+  snippet: Snippet;
+}
+
+export const Card = ({ snippet }: CardProps) => {
+  let mouseX = useMotionValue(0);
+  let mouseY = useMotionValue(0);
+  const [randomString, setRandomString] = useState("");
+
+  useEffect(() => {
+    let str = generateRandomString(1500);
+    setRandomString(str);
+  }, []);
+
+  function onMouseMove({ currentTarget, clientX, clientY }: { currentTarget: HTMLDivElement; clientX: number; clientY: number }) {
+    let { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+    const str = generateRandomString(1500);
+    setRandomString(str);
+  }
+
+  return (
+    <div className="p-0.5 bg-transparent w-full h-full relative">
+      <div
+        onMouseMove={onMouseMove}
+        className="group rounded-3xl w-full relative overflow-hidden bg-transparent h-full p-6 flex flex-col"
       >
-        <div
-          onMouseMove={onMouseMove}
-          className="group rounded-3xl w-full relative overflow-hidden bg-transparent flex items-center justify-center h-full"
-        >
-          <CardPattern
-            mouseX={mouseX.get()}
-            mouseY={mouseY.get()}
-            randomString={randomString}
-          />
-          <div className="relative z-10 flex items-center justify-center">
-            <div className="relative h-44 w-44  rounded-full flex items-center justify-center text-white font-bold text-4xl">
-              <div className="absolute w-full h-full bg-black/[0.8] blur-sm rounded-full" />
-              <span className="text-white z-20">Humaans</span>
-            </div>
+        <CardPattern
+          mouseX={mouseX.get()}
+          mouseY={mouseY.get()}
+          randomString={randomString}
+        />
+        <div className="relative z-10 flex-1 flex flex-col">
+          <h3 className="text-xl font-bold text-white mb-2">{snippet.title}</h3>
+          <p className="text-gray-300 text-sm mb-4 line-clamp-2">{snippet.description}</p>
+          
+          <div className="flex flex-wrap gap-2 mb-4">
+            {snippet.tags.map((tag, index) => (
+              <span key={index} className="px-2 py-1 bg-black/30 text-xs rounded-full text-gray-300">
+                {tag}
+              </span>
+            ))}
+          </div>
+          
+          <div className="mt-auto pt-4 flex justify-between items-center text-sm text-gray-400">
+            <span>{snippet.language}</span>
+            <span>Updated: {snippet.lastUpdated}</span>
           </div>
         </div>
-      </a>
-    );
-  };
+      </div>
+    </div>
+  );
+};
 
   const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
