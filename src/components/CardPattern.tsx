@@ -1,8 +1,8 @@
 import { motion, useMotionTemplate } from "framer-motion";
 
 export function CardPattern({ mouseX, mouseY, randomString }: { mouseX: number; mouseY: number; randomString: string }) {
-    let maskImage = useMotionTemplate`radial-gradient(250px at ${mouseX}px ${mouseY}px, white, transparent)`;
-    let style = { maskImage, WebkitMaskImage: maskImage };
+    const maskImage = useMotionTemplate`radial-gradient(250px at ${mouseX}px ${mouseY}px, white, transparent)`;
+    const style = { maskImage, WebkitMaskImage: maskImage };
   
     return (
       <div className="pointer-events-none">

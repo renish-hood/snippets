@@ -6,20 +6,8 @@ import { FiArrowLeft, FiClock, FiGithub, FiExternalLink } from 'react-icons/fi';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github-dark.css';
+import { Snippet } from '@/types/snippet.types';
 
-interface Snippet {
-  id: string;
-  title: string;
-  description: string;
-  content: string;
-  tags: string[];
-  lastUpdated: string;
-  language: string;
-  githubUrl?: string;
-  demoUrl?: string;
-}
-
-// Mock data - In a real app, you would fetch this from your API or GitHub
 const getSnippetById = (snippetId: string): Promise<Snippet | null> => {
   return new Promise((resolve) => {
     const mockSnippets: Snippet[] = [
