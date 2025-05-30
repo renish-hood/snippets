@@ -1,5 +1,10 @@
 [Live Demo](https://rcsnippets.vercel.app)
 
+![Screenshot 2025-05-30 at 1 03 19 AM](https://github.com/user-attachments/assets/d78537b7-7bfc-479c-a546-ee3e081b83f6)
+
+![Screenshot 2025-05-30 at 10 28 11 AM](https://github.com/user-attachments/assets/b9c1d64c-d0f4-4791-9ba6-1d6a32d05313)
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
