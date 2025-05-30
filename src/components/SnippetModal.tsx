@@ -13,7 +13,6 @@ interface SnippetModalProps {
 }
 
 export function SnippetModal({ snippet, onClose }: SnippetModalProps) {
-
   const [copied, setCopied] = useState(false);
 
   const handleEscape = useCallback((e: KeyboardEvent) => {
@@ -38,9 +37,9 @@ export function SnippetModal({ snippet, onClose }: SnippetModalProps) {
     }
   };
 
-  if (!snippet) return null;
-
   const copyToClipboard = (text: string) => {
+    if (!snippet) return;
+    
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

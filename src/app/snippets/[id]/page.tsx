@@ -1,18 +1,30 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SnippetModal } from '@/components/SnippetModal';
-import {  mockSnippets } from '@/constants';
+import { mockSnippets } from '@/constants';
+import { Snippet } from '@/types/snippet.types';
 
-export default  function SnippetModalPage({
+export default function SnippetModalPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const router = useRouter();
-  const snippet = mockSnippets.find(async (s) => s.id === (await params).id);
-  
+  const [id, setId] = useState<string | null>(null);
+  const [snippet, setSnippet] = useState<Snippet | null>(null);
+
+  // Handle async params
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      const snippetId = resolvedParams.id;
+      setId(snippetId);
+      const foundSnippet = mockSnippets.find((s) => s.id === snippetId);
+      setSnippet(foundSnippet || null);
+    });
+  }, [params]);
+
   const handleClose = useCallback(() => {
     router.back();
   }, [router]);
@@ -29,19 +41,28 @@ export default  function SnippetModalPage({
   }, [handleClose]);
 
   useEffect(() => {
-    if (!snippet) {
-      router.replace('/snippets/not-found');
+    if (id && snippet === null) {
+      // Only redirect if we've resolved the ID and confirmed no snippet exists
+      const foundSnippet = mockSnippets.find((s) => s.id === id);
+      if (!foundSnippet) {
+        router.replace('/snippets/not-found');
+      }
     }
-  }, [snippet, router]);
+  }, [id, snippet, router]);
+
+  // Show loading state while resolving params
+  if (id === null) {
+    return <div>Loading...</div>;
+  }
 
   if (!snippet) {
     return null;
   }
 
   return (
-    <SnippetModal 
-      snippet={snippet} 
-      onClose={handleClose} 
+    <SnippetModal
+      snippet={snippet}
+      onClose={handleClose}
     />
   );
 }
