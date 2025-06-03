@@ -2,10 +2,11 @@
 
 import React from 'react';
 import Head from "next/head";
-import { Card } from "../../components/Card";
+import Card from "../../components/Card";
 import { mockSnippets } from '@/constants';
 
-export default function SnippetsPage() {
+
+function SnippetsPage() {
   return (
     <div className="min-h-screen bg-black">
       <Head>
@@ -30,3 +31,7 @@ export default function SnippetsPage() {
     </div>
   );
 }
+
+SnippetsPage.displayName = 'SnippetsPage';
+
+export default SnippetsPage;

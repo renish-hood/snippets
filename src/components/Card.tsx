@@ -5,20 +5,31 @@ import { useMotionValue } from "framer-motion";
 import { CardPattern } from "./CardPattern";
 import { useRouter } from "next/navigation";
 import { CardProps } from "@/types/snippet.types";
+import { withLogger } from "@/utils/withLogger";
 
-
-
-export const Card = ({ snippet }: CardProps) => {
+const Card = ({ snippet }: CardProps) => {
   const router = useRouter();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const [randomString, setRandomString] = useState("");
   const [isHovered, setIsHovered] = useState(false);
 
+  const componentName = 'CardComponent';
+
   useEffect(() => {
     const str = generateRandomString(1500);
     setRandomString(str);
+    console.log(`🎯 [${componentName}] Random string generated on mount`);
   }, []);
+
+  // Log state changes
+  useEffect(() => {
+    console.log(`🎯 [${componentName}] Hover state changed:`, isHovered);
+  }, [isHovered]);
+
+  useEffect(() => {
+    console.log(`🎯 [${componentName}] Random string updated:`, randomString.length, 'characters');
+  }, [randomString]);
 
   function onMouseMove({
     currentTarget,
@@ -34,10 +45,13 @@ export const Card = ({ snippet }: CardProps) => {
     mouseY.set(clientY - top);
     const str = generateRandomString(1500);
     setRandomString(str);
+    
+    console.log(`🖱️ [${componentName}] Mouse moved:`, { x: mouseX, y: mouseY });
   }
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    console.log(`🔗  Card clicked, navigating to:`, `/snippets/${snippet.id}`);
     router.push(`/snippets/${snippet.id}`, { scroll: false });
   };
 
@@ -60,6 +74,7 @@ export const Card = ({ snippet }: CardProps) => {
           mouseY={mouseY.get()}
           randomString={randomString}
         />
+        
         <div className="relative z-10 flex-1 flex flex-col">
           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
             {snippet.title}
@@ -107,4 +122,8 @@ function generateRandomString(length: number) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-};
+}
+
+Card.displayName = 'CardComponent';
+
+export default withLogger(Card);
