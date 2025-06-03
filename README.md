@@ -4,6 +4,14 @@
 
 ![Screenshot 2025-05-30 at 10 28 11 AM](https://github.com/user-attachments/assets/b9c1d64c-d0f4-4791-9ba6-1d6a32d05313)
 
+# Bookmark Manager 
+(Visit - https://rcsnippets.vercel.app/dashboard)
+- App with dashboard that allows adding bookmarks.
+
+
+[bookmark-manager-demo.webm](https://github.com/user-attachments/assets/69a16c91-b2b3-46c6-937c-5148b939f225)
+
+---
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
