@@ -15,7 +15,6 @@ export default function SnippetModalPage({
   const [id, setId] = useState<string | null>(null);
   const [snippet, setSnippet] = useState<Snippet | null>(null);
 
-  // Handle async params
   useEffect(() => {
     params.then((resolvedParams) => {
       const snippetId = resolvedParams.id;
@@ -42,7 +41,6 @@ export default function SnippetModalPage({
 
   useEffect(() => {
     if (id && snippet === null) {
-      // Only redirect if we've resolved the ID and confirmed no snippet exists
       const foundSnippet = mockSnippets.find((s) => s.id === id);
       if (!foundSnippet) {
         router.replace('/snippets/not-found');
@@ -50,7 +48,6 @@ export default function SnippetModalPage({
     }
   }, [id, snippet, router]);
 
-  // Show loading state while resolving params
   if (id === null) {
     return <div>Loading...</div>;
   }
@@ -60,9 +57,15 @@ export default function SnippetModalPage({
   }
 
   return (
-    <SnippetModal
-      snippet={snippet}
-      onClose={handleClose}
-    />
+    <SnippetModal snippet={snippet} onClose={handleClose}>
+      <SnippetModal.Header />
+      <SnippetModal.Content>
+        <SnippetModal.Tags />
+        <SnippetModal.Meta />
+        <SnippetModal.Links />
+        <SnippetModal.Code />
+      </SnippetModal.Content>
+      <SnippetModal.Footer />
+    </SnippetModal>
   );
 }
