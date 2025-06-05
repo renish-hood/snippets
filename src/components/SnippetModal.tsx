@@ -1,12 +1,12 @@
 "use client";
 
 import React, {
-  useCallback,
   useEffect,
   useState,
   createContext,
   useContext,
-  ReactNode
+  ReactNode,
+  useRef
 } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { motion, AnimatePresence } from "framer-motion";
@@ -40,28 +40,28 @@ interface SnippetModalProps {
 
 export function SnippetModal({ snippet, onClose, children }: SnippetModalProps) {
   const [copied, setCopied] = useState(false);
+  const backdropRef = useRef<HTMLDivElement>(null);
 
-  const handleEscape = useCallback(
-    (e: KeyboardEvent) => {
+  // Fixed useEffect - removed handleEscape from dependencies
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
       }
-    },
-    [onClose]
-  );
+    };
 
-  useEffect(() => {
     document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleEscape);
+    document.addEventListener("keydown", handleEscape);
 
     return () => {
       document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleEscape);
     };
-  }, [handleEscape]);
+  }, [onClose]); // Only depend on onClose
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+  // Improved backdrop click handler using ref
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === backdropRef.current) {
       onClose();
     }
   };
@@ -84,7 +84,8 @@ export function SnippetModal({ snippet, onClose, children }: SnippetModalProps) 
     <SnippetModalContext.Provider value={contextValue}>
       <AnimatePresence>
         <motion.div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
+          ref={backdropRef}
+          className="modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
           onClick={handleBackdropClick}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -96,7 +97,7 @@ export function SnippetModal({ snippet, onClose, children }: SnippetModalProps) 
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()} // Prevent event bubbling
           >
             {children}
           </motion.div>

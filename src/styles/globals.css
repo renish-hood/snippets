@@ -74,3 +74,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.modal-backdrop {
+  background-color: rgba(5, 12, 54, 0.8);
+  backdrop-filter: blur(4px);
+}
