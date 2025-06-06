@@ -23,7 +23,7 @@ export function LayoutShell({ children }: LayoutShellProps) {
           <div className="flex h-16 justify-between">
             <div className="flex">
               <div className="flex flex-shrink-0 items-center">
-                <h1 className="text-xl font-bold">Bookmark Manager</h1>
+                <Link href="/dashboard"><h1 className="text-xl font-bold">Bookmark Manager</h1></Link>
               </div>
               <div className="ml-6 flex space-x-8">
                 {navigation.map((item) => (
