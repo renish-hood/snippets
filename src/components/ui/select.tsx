@@ -1,6 +1,7 @@
 import { PropsWithChildren, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import React from "react";
+
 export const Select = ({
   children,
   value,
@@ -19,12 +20,24 @@ export const Select = ({
   };
 
   return (
-    <div className="relative">
-      <SelectTrigger onClick={() => setIsOpen(!isOpen)} className="w-40">
-        <SelectValue placeholder="Select..." value={selectedValue} />
-      </SelectTrigger>
+    <div className="relative inline-block text-left">
+      <div>
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-40 flex items-center justify-between px-3 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <span className="truncate">
+            <SelectValue value={selectedValue} placeholder="Select..." />
+          </span>
+          <ChevronDown className="h-4 w-4 ml-2 flex-shrink-0" />
+        </button>
+      </div>
+
       {isOpen && (
-        <SelectContent onSelect={handleSelect}>{children}</SelectContent>
+        <SelectContent onSelect={handleSelect}>
+          {children}
+        </SelectContent>
       )}
     </div>
   );
@@ -46,12 +59,8 @@ export const SelectTrigger = ({
   className = "",
   onClick,
 }: PropsWithChildren<{ className?: string; onClick?: () => void }>) => (
-  <button
-    className={`flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
-    onClick={onClick}
-  >
+  <button type="button" className={className} onClick={onClick}>
     {children}
-    <ChevronDown className="h-4 w-4 opacity-50" />
   </button>
 );
 
@@ -61,28 +70,30 @@ export const SelectContent = ({
   children,
   onSelect,
 }: PropsWithChildren<{ onSelect?: (value: string) => void }>) => (
-  <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+  <div className="absolute z-10 mt-1 w-full bg-white shadow-lg">
     {React.Children.map(children, (child) =>
       React.isValidElement(child)
-        ? React.createElement(child.type, {
-            ...(child.props as object),
-            onSelect,
-          })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ? React.cloneElement(child as React.ReactElement<any>, {
+          ...(child.props as Record<string, unknown>),
+          onSelect,
+        })
         : child
     )}
   </div>
 );
+
 export const SelectItem = ({
   children,
   value,
   onSelect,
 }: PropsWithChildren<{
   value: string;
-  onSelect: (value: unknown) => void;
+  onSelect?: (value: string) => void;
 }>) => (
   <div
-    className="cursor-pointer px-3 py-2 text-sm hover:bg-gray-100"
-    onClick={() => onSelect(value)}
+    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+    onClick={() => onSelect?.(value)}
   >
     {children}
   </div>
