@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
     Share2,
 } from "lucide-react";
 import { Bookmark } from "@/types/bookmark";
+import Tooltip from "../ui/tooltip";
 
 interface BookmarksGridProps {
     bookmarks: Bookmark[];
@@ -56,18 +58,26 @@ export function BookmarksGrid({
                                 <CardTitle className="text-lg">{bookmark.title}</CardTitle>
                             </div>
                             <div className="flex items-center gap-1">
-                                <Button
-                                    variant="default"
-                                    size="sm"
-                                    onClick={() =>
-                                        onToggleFavorite(bookmark.id, bookmark.isFavorite)
-                                    }
-                                >
-                                    <Heart
-                                        className={`h-4 w-4 ${bookmark.isFavorite ? "fill-red-500 text-red-500" : ""
-                                            }`}
-                                    />
-                                </Button>
+
+
+                                <Tooltip content={bookmark.isFavorite ? "Remove from favorites" : "Add to favorites"}>
+                                    {({ isVisible, tooltipProps }: { isVisible: boolean; tooltipProps: any }) => (
+                                        <Button
+                                            {...tooltipProps}
+                                            variant={isVisible ? "default" : "ghost"}  // Changes based on hover state
+                                            size="sm"
+                                            className={isVisible ? 'bg-red-50' : ''}   // Dynamic styling
+                                            onClick={() => onToggleFavorite(bookmark.id, bookmark.isFavorite)}
+                                        >
+                                            <Heart
+                                                className={`h-4 w-4 ${bookmark.isFavorite
+                                                    ? "fill-red-500 text-red-500"
+                                                    : isVisible ? "text-red-400" : ""  // Dynamic color based on hover
+                                                    }`}
+                                            />
+                                        </Button>
+                                    )}
+                                </Tooltip>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <Button variant="default" size="sm">
@@ -120,8 +130,8 @@ export function BookmarksGrid({
                                     <span
                                         key={tag}
                                         className={`rounded-full px-2 py-1 text-xs cursor-pointer transition-colors ${selectedTags.includes(tag)
-                                                ? "bg-blue-600 text-white"
-                                                : "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                                            ? "bg-blue-600 text-white"
+                                            : "bg-blue-100 text-blue-800 hover:bg-blue-200"
                                             }`}
                                         onClick={() => onTagToggle(tag)}
                                     >
